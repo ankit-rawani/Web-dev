@@ -12,10 +12,18 @@ window.addEventListener('resize', e => {
 
 window.addEventListener('mousedown', e => {
     if(ball.dy>0){
+        if(ball.dy<1){
+            ball.y = canv.height - ball.radius -1
+        }
         ball.dy += 5
     }else{
+        if (ball.dy > -1) {
+            ball.y = canv.height - ball.radius - 1
+        }
         ball.dy -= 5
     }
+
+    
 })
 
 
@@ -37,7 +45,7 @@ function Ball(x, y, dx, dy, radius, color){
     }
 
     this.move = function(){
-        if(this.y > canv.height - this.radius){
+        if(this.y >= canv.height - this.radius){
             this.dy = -this.dy*0.95
         }
         else{
