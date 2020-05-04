@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Count Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="./css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="highScore">
+    <div id="hstab">
+     <div class="back">BACK</div>
+     <h1> HIGH SCORES </h1>
+     <hr width="60%"/>
+     <div id="hslist">
+     </div>
+    </div>
+  </div>
+  <div id="init">
+    <h1>WELCOME</h1>
+    <hr width=60% />
+    <h4 id="mainStart">NEW GAME</h4>
+    <h4 id="high">HIGH SCORES</h4>
+    <hr width=60% />
+  </div>
+  <div id="main">
+    <section id="top">
+      <div class="back">BACK</div>
+      <div></div>
+      <div class="timer">
+        TIME<br/>
+        <div id="clock">0.000</div>
+      </div>
+      <div class="timer">
+        BEST TIME<br/>
+        <div id="best">0.000</div>
+      </div>
+    </section>
+    <section id="instr">
+      <div> Click <strong>the numbers</strong> as quickly as you can!</div>
+      <div id="new"><h3 onclick="newGame()">New Game</h3></div>
+    </section>
+  <section>
+    <div id="start">
+      <h2>Select difficulty</h2>
+      <strong>Total Count</strong><br/>
+      <div id="totalCount">
+      <input type="radio" id="r1" name="total" value="70" /><label for="r1">70</label>
+      <input type="radio" id="r2" name="total" value="80" /><label for="r2">80</label>
+      <input type="radio" id="r3" name="total" value="90" /><label for="r3">90</label>
+      <input type="radio" id="r4" name="total" value="100" /><label for="r4">100</label>
+      </div>
+      <br/>
+      <br/>
+      <strong>Grid size</strong><br/>
+      <div id="gridSize">
+      <input type="radio" id="g1" class="gridSize" name="gridSize" value="5" /><label for="g1">5x5</label>
+      <input type="radio" id="g2" class="gridSize" name="gridSize" value="6" /><label for="g2">6x6</label>
+      <input type="radio" id="g3" class="gridSize" name="gridSize" value="7" /><label for="g3">7x7</label>
+      <input type="radio" id="g4" class="gridSize" name="gridSize" value="8" /><label for="g4">8x8</label>
+      </div>
+      <br/>
+      <div id="begin" onclick="game()">START</div>
+    </div>
+    <div id="boxes">
+    </div>
+    <div id="msg">
+    </div>
+  </section>
+  </div>
+  <script src="./code/index.js"></script>
+</body>
+</html>
