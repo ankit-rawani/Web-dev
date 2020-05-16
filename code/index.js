@@ -97,6 +97,23 @@ function Line(x1, y1, x2, y2, color) {
     }
 }
 
+function Arc(centre, radius, sAngle, eAngle, color){
+    this.centre = centre
+    this.radius = radius
+    this.color = color
+    this.sAngle = sAngle
+    this.eAngle = eAngle
+
+    this.draw = function(){
+        ctx.beginPath()
+        ctx.strokeStyle = this.color
+        ctx.arc(this.centre.x, this.centre.y, this.radius, this.sAngle, this.eAngle)
+        ctx.stroke()
+        ctx.closePath()
+    }
+
+}
+
 function gameEnd(){
     console.log("done")
     window.cancelAnimationFrame(window.x)
@@ -148,8 +165,11 @@ function Triangle(centre, side, velocity){
     this.move = function(){
         this.centre.x += this.velocity.x
         this.centre.y += this.velocity.y
-        this.draw()
+        this.rotate()
 
+    }
+
+    this.end = function() {
         if (distanceFromLine(this.line1, ball) <= ball.radius && this.line1.color != ball.color) {
             // console.log(distanceFromLine(this.line1, ball))
             gameEnd()
@@ -164,7 +184,6 @@ function Triangle(centre, side, velocity){
             // console.log(distanceFromLine(this.line3, ball))
             gameEnd()
         }
-
     }
 
     this.rotate = function () {
@@ -177,12 +196,81 @@ function Triangle(centre, side, velocity){
 
 }
 
-var c = {x:canv.width/2, y:-100}
-var s = 200
-var v = {x:0,y:3}
+function Circle(centre, radius, velocity){
+    this.centre = centre
+    this.radius = radius
+    this.velocity = velocity
+    this.colorArray = ["#ff0000", "#00ff00","#0000ff"]
+    this.arc1
+    this.arc2
+    this.arc3
+    this.angle = 0
+    this.radVelocity = 0.05
+
+    this.draw = function(){
+        this.arc1 = new Arc(this.centre, this.radius, this.angle, this.angle + (2 / 3) * Math.PI, this.colorArray[0])
+        this.arc1.draw()
+        this.arc2 = new Arc(this.centre, this.radius, this.angle + (2 / 3) * Math.PI, this.angle + (4 / 3) * Math.PI, this.colorArray[1])
+        this.arc2.draw()
+        this.arc3 = new Arc(this.centre, this.radius, this.angle + (4 / 3) * Math.PI, this.angle + 2 * Math.PI, this.colorArray[2])
+        this.arc3.draw()
+    }
+
+    this.rotate = function(){
+        this.angle += this.radVelocity
+        this.draw()
+    }
+
+    this.move = function () {
+        this.centre.x += this.velocity.x
+        this.centre.y += this.velocity.y
+        this.rotate()
+    }
+
+    this.end = function() {
+        if ((distance(this.centre.x, this.centre.y, ball.x, ball.y) <= ball.radius + this.radius + 5) && distance(this.centre.x, this.centre.y, ball.x, ball.y) >= ball.radius + this.radius - 5) {
+            let ang
+            if (ball.y > this.centre.y) {
+                ang = (this.angle - Math.PI / 2) % (2 * Math.PI)
+    
+            }
+            else {
+                ang = (this.angle + Math.PI / 2) % (2 * Math.PI)
+            }
+
+            if (ang > 0 && ang <= (2 / 3) * Math.PI) {
+                console.log("blue")
+                if (ball.color != this.colorArray[2]) {
+                    gameEnd()
+                }
+            }
+            else if (ang > (2 / 3) * Math.PI && ang <= (4 / 3) * Math.PI) {
+                console.log("green")
+                if (ball.color != this.colorArray[1]) {
+                    gameEnd()
+                }
+            }
+            else {
+                console.log('red')
+                if (ball.color != this.colorArray[0]) {
+                    gameEnd()
+                }
+            }
+        }
+    }
+}
+
+var c1 = { x: canv.width / 2, y: -100 }
+var s1 = 200
+var v1 = { x: 0, y: 3 }
+
+var c2 = { x: canv.width / 2, y: -500 }
+var s2 = 100
+var v2 = { x: 0, y: 3 }
 
 var ball = new Ball(canv.width / 2, canv.height/2, 0, 2, 5, "#ff0000")
-var tri = new Triangle(c,s,v)
+var tri = new Triangle(c1,s1,v1)
+var cir = new Circle(c2, s2, v2)
 
 function animate() {
     window.x = window.requestAnimationFrame(animate)
@@ -190,11 +278,16 @@ function animate() {
     
     ball.move()
     if (ball.y <= 3 * canv.height / 4) {
+        cir.move()
+        cir.end()
         tri.move()
-        tri.rotate()
+        tri.end()
     }
     else {
         tri.draw()
+        tri.end()
+        cir.draw()
+        cir.end()
     }
     
 
