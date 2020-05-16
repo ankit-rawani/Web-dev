@@ -2,7 +2,10 @@ const canv = document.querySelector('canvas')
 var ctx = canv.getContext("2d")
 
 canv.height = window.innerHeight
-canv.width = window.innerWidth    
+canv.width = window.innerWidth   
+
+ctx.lineWidth = 10
+ctx.lineCap = "round"
 
 window.addEventListener('resize', e => {
     canv.height = window.innerHeight
@@ -134,9 +137,6 @@ function Triangle(centre, side, velocity){
     this.line3
 
     this.draw = function(){
-        ctx.lineWidth = 10
-        ctx.lineCap = "round"
-
         this.line1 = new Line(
             this.centre.x + this.p1.x, this.centre.y + this.p1.y,
             this.centre.x + this.p2.x, this.centre.y + this.p2.y,
@@ -260,17 +260,96 @@ function Circle(centre, radius, velocity){
     }
 }
 
-var c1 = { x: canv.width / 2, y: -100 }
+function Fan(centre, radius, velocity) {
+    this.centre = centre
+    this.radius = radius
+    this.velocity = velocity
+    this.colorArray = ["#ff0000", "#00ff00", "#0000ff"]
+    this.angle = 0
+    this.radVelocity = 0.05
+    this.line1
+    this.line2
+    this.line3
+    this.p1 = { x: this.radius * Math.cos(this.angle), y: this.radius * Math.sin(this.angle) }
+    this.p2 = { x: this.radius * Math.cos(this.angle + (2 / 3) * Math.PI), y: this.radius * Math.sin(this.angle + (2 / 3) * Math.PI) }
+    this.p3 = { x: this.radius * Math.cos(this.angle + (4 / 3) * Math.PI), y: this.radius * Math.sin(this.angle + (4 / 3) * Math.PI) }
+
+    this.draw = function() {
+        this.line1 = new Line(this.centre.x, this.centre.y, this.centre.x + this.p1.x, this.centre.y + this.p1.y, colorArray[0])
+        this.line1.draw()
+
+        this.line2 = new Line(this.centre.x, this.centre.y, this.centre.x + this.p2.x, this.centre.y + this.p2.y, colorArray[1])
+        this.line2.draw()
+
+        this.line3 = new Line(this.centre.x, this.centre.y, this.centre.x + this.p3.x, this.centre.y + this.p3.y, colorArray[2])
+        this.line3.draw()
+    }
+
+    this.rotate = function() {
+        this.angle += this.radVelocity
+        this.p1 = { x: this.radius * Math.cos(this.angle), y: this.radius * Math.sin(this.angle) }
+        this.p2 = { x: this.radius * Math.cos(this.angle + (2 / 3) * Math.PI), y: this.radius * Math.sin(this.angle + (2 / 3) * Math.PI) }
+        this.p3 = { x: this.radius * Math.cos(this.angle + (4 / 3) * Math.PI), y: this.radius * Math.sin(this.angle + (4 / 3) * Math.PI) }
+        this.draw()
+    }
+
+    this.move = function() {
+        this.centre.x += this.velocity.x
+        this.centre.y += this.velocity.y
+
+        this.rotate()
+    }
+
+    this.end = function() {
+            if (distanceFromLine(this.line1, ball) <= ball.radius && this.line1.color != ball.color) {
+                // console.log(distanceFromLine(this.line1, ball))
+                gameEnd()
+            }
+
+            if (distanceFromLine(this.line2, ball) <= ball.radius && this.line2.color != ball.color) {
+                // console.log(distanceFromLine(this.line2, ball))
+                gameEnd()
+            }
+
+            if (distanceFromLine(this.line3, ball) <= ball.radius && this.line3.color != ball.color) {
+                // console.log(distanceFromLine(this.line3, ball))
+                gameEnd()
+            }
+    }
+
+
+}
+
+function func(a, b) {
+    return Math.random() - 0.5
+}
+
+var v = { x: 0, y: 3 }
+var y_array = [-100, -700, -1300]
+
+y_array.sort(func)
+
+var c1 = { x: canv.width / 2, y: y_array[0] }
 var s1 = 200
-var v1 = { x: 0, y: 3 }
 
-var c2 = { x: canv.width / 2, y: -500 }
+var c2 = { x: canv.width / 2, y: y_array[1] }
 var s2 = 100
-var v2 = { x: 0, y: 3 }
 
-var ball = new Ball(canv.width / 2, canv.height/2, 0, 2, 5, "#ff0000")
-var tri = new Triangle(c1,s1,v1)
-var cir = new Circle(c2, s2, v2)
+var c3 = { x: canv.width / 2 - 40, y: y_array[2] }
+var s3 = 100
+
+var colorArray = ["#ff0000","#00ff00","#0000ff"]
+
+var ball = new Ball(canv.width / 2, canv.height/2, 0, 2, 5, colorArray[Math.floor(Math.random()*3)])
+
+var obstacles = []
+var tri = new Triangle(c1,s1,v)
+var cir = new Circle(c2, s2, v)
+var fan = new Fan(c3, s3, v)
+
+obstacles.push(tri)
+obstacles.push(cir)
+obstacles.push(fan)
 
 function animate() {
     window.x = window.requestAnimationFrame(animate)
@@ -278,16 +357,16 @@ function animate() {
     
     ball.move()
     if (ball.y <= 3 * canv.height / 4) {
-        cir.move()
-        cir.end()
-        tri.move()
-        tri.end()
+            obstacles.forEach(obs => {
+            obs.move()
+            obs.end()
+        })
     }
     else {
-        tri.draw()
-        tri.end()
-        cir.draw()
-        cir.end()
+        obstacles.forEach(obs => {
+            obs.rotate()
+            obs.end()
+        })
     }
     
 
