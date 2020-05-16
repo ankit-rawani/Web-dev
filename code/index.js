@@ -7,6 +7,11 @@ if(localStorage.length == 0){
 }
 highScore = localStorage[localStorage.key(0)]
 
+var aud = new Audio("../Evix - Whatcha Think (feat. Jake Herring).mp3")
+var click = new Audio("../Web-dev-Task1/assets/Click.mp3")
+var err = new Audio("../Web-dev-Task1/assets/Click2.mp3")
+var beep = new Audio("../Web-dev-Task1/assets/timebeep.mp3")
+
 const play = document.querySelector('#play')
 const high = document.querySelector('#high')
 const about = document.querySelector('#about')
@@ -42,6 +47,7 @@ window.addEventListener('resize', e => {
 
 
 canv.addEventListener('mousedown', e => {
+    click.play()
     ball.dy -= 5
     if(ball.y >= canv.height-ball.radius-1){
         ball.y = canv.height - ball.radius - 2
@@ -169,7 +175,7 @@ function ColorSwitch(pos, vel) {
         this.pos.x += this.vel.x
         this.pos.y += this.vel.y
 
-        if(ball.y <= this.pos.y+2 && ball.y >=this.pos.y - 2){
+        if(ball.y <= this.pos.y+5 && ball.y >=this.pos.y - 5){
             ball.color = this.colorArr[Math.floor(Math.random() * this.colorArr.length)]
         }
         
@@ -179,6 +185,7 @@ function ColorSwitch(pos, vel) {
 }
 
 function gameEnd(){
+    err.play()
     gameEnded = true
     gamePlayState = false
     console.log("done")
@@ -421,6 +428,9 @@ function animate() {
     window.x = window.requestAnimationFrame(animate)
     ctx.clearRect(0, 0, innerWidth, innerHeight)
     
+    if(score>2000){
+        gameWon()
+    }
     ball.move()
     if (ball.y <= 3 * canv.height / 4) {
             obstacles.forEach(obs => {
@@ -452,6 +462,7 @@ function animate() {
 
 
 play.addEventListener("click", e=> {
+    beep.play()
     circle.style.display = "none"
     intro.style.display = "none"
     options.style.display = "none"
@@ -469,6 +480,7 @@ playgame.addEventListener("click", playGame)
 
 
 function pauseGame(){
+    beep.play()
     window.cancelAnimationFrame(window.x)
     menu.style.display = "inline-block"
     ham.style.display = "none"
@@ -476,6 +488,7 @@ function pauseGame(){
 }
 
 function playGame(){
+    beep.play()
     if(!gamePlayState && !gameEnded){
         ham.style.display = "inline-block"
         menu.style.display = "none"
@@ -487,6 +500,7 @@ function playGame(){
 function replayGame(){
     gamePlayState = true
     gameEnded = false
+    beep.play()
 
     if(highScore < score){
         localStorage.clear()
@@ -558,6 +572,7 @@ htitle.style.textAlign = "center"
 htitle.style.fontFamily = "'Chewy', cursive"
 
 function showHigh(){
+    aud.play()
     hmsg.textContent = localStorage.key(0) + " : " + localStorage[localStorage.key(0)]
     htitle.textContent = "Our Highest Scorer"
     msg.appendChild(htitle)
@@ -568,6 +583,8 @@ function showHigh(){
 }
 
 function hideHigh(){
+    aud.pause()
+    beep.play()
     while(msg.firstChild){
         msg.removeChild(msg.firstChild)
     }
@@ -580,8 +597,25 @@ function hideHigh(){
 about.addEventListener("click", showAbout)
 
 function showAbout() {
+    aud.play()
     htitle.textContent = "About"
     hmsg.innerHTML = "This is a game made as a task for the Inductions of Delta Club of NITT.<br/>Made by Ankit Rawani <br/>GitHub ID : <a href='https://github.com/ankit-rawani'><b>ankit-rawani</b></a>"
+    msg.appendChild(htitle)
+    msg.appendChild(hmsg)
+    blackout.style.display = "block"
+    msg.style.display = "block"
+    crossHigh.style.display = "block"
+}
+
+function gameWon(){
+    aud.play()
+    gameEnded = true
+    gamePlayState = false
+    console.log("done")
+    window.cancelAnimationFrame(window.x)
+    ctx.clearRect(0, 0, canv.width, canv.height)
+    htitle.textContent = "You Won!!!"
+    hmsg.textContent = "Congatulations! You completed the game."
     msg.appendChild(htitle)
     msg.appendChild(hmsg)
     blackout.style.display = "block"
