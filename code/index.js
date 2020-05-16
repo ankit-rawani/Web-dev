@@ -17,30 +17,24 @@ window.addEventListener('mousedown', e => {
     }
 })
 
-// function rotateLine(ln, angle, center){
-//     let ratio = (ln.x1-center.x)/(ln.x1-ln.x2)
-//     let l1 = ratio * length
-//     let l2 = length - l1
-//     ln.x1 = center.x - l1 * Math.cos(angle)
-//     ln.y1 = center.y - l1 * Math.sin(angle)
-//     ln.x2 = center.x + l2 * Math.cos(angle)
-//     ln.y2 = center.y + l2 * Math.sin(angle)
-// }
-
 function distance(x0, y0, x, y) {
     return Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0))
 }
 
 function distanceFromLine(l,ball) {
-    let z = ((l.x2 - l.x1) * (ball.x - l.x1) + (l.y2 - l.y1) * (ball.y - l.y1)) / distance(l.x1, l.y1, l.x2, l.y2)
+    let side = distance(l.x1, l.y1, l.x2, l.y2)
+    let z = ((l.x2 - l.x1) * (ball.x - l.x1) + (l.y2 - l.y1) * (ball.y - l.y1)) / side
     let a = distance(ball.x, ball.y, l.x1, l.y1)
 
-    // console.log(Math.sqrt(a * a - z * z))
-    return Math.sqrt( a * a - z * z)
+    // console.log(a, z)
+    if(z <= side && z>=0)
+    { 
+        return Math.sqrt( a * a - z * z)
+    }
+    else {
+        return 2 * ball.radius
+    }
 }
-
-
-
 
 function Ball(x, y, dx, dy, radius, color){
     this.radius = radius
@@ -86,11 +80,6 @@ function Ball(x, y, dx, dy, radius, color){
     
 }
 
-// function rgb(r, g, b){
-//     return ("#" + r.toString(16) + g.toString(16) + b.toString(16)) 
-
-// }
-
 function Line(x1, y1, x2, y2, color) {
     this.x1 = x1
     this.y1 = y1
@@ -111,7 +100,7 @@ function Line(x1, y1, x2, y2, color) {
 function gameEnd(){
     console.log("done")
     window.cancelAnimationFrame(window.x)
-    // ctx.clearRect(0,0,innerWidth,innerHeight)
+    ctx.clearRect(0,0,canv.width,canv.height)
 }
 
 function Triangle(centre, side, velocity){
@@ -167,12 +156,12 @@ function Triangle(centre, side, velocity){
         }
 
         if (distanceFromLine(this.line2, ball) <= ball.radius && this.line2.color != ball.color) {
-            // console.log(distanceFromLine(this.line1, ball))
+            // console.log(distanceFromLine(this.line2, ball))
             gameEnd()
         }
 
         if (distanceFromLine(this.line3, ball) <= ball.radius && this.line3.color != ball.color) {
-            console.log(distanceFromLine(this.line3, ball))
+            // console.log(distanceFromLine(this.line3, ball))
             gameEnd()
         }
 
@@ -188,48 +177,19 @@ function Triangle(centre, side, velocity){
 
 }
 
-// var length = 150
-// var p1 = { x: -length / 2, y: length / (2 * Math.sqrt(3)) }
-// var p2 = { x: length / 2, y: length / (2 * Math.sqrt(3)) }
-// var v = { x: 0, y: 0 }
-// var i = 0
-// var j = 0
-
 var c = {x:canv.width/2, y:-100}
-var s = 100
+var s = 200
 var v = {x:0,y:3}
 
-var ball = new Ball(canv.width / 2, canv.height/2, 0, 2, 5, "#ffffff")
+var ball = new Ball(canv.width / 2, canv.height/2, 0, 2, 5, "#ff0000")
 var tri = new Triangle(c,s,v)
-
-// var line = new Line(p1, p2, "#ffffff",v)
-// var line2 = new Line(p1, p2, "#ff0000", v)
-// var line3 = new Line(p1, p2, "#00ff00", v)
-
-// rotateLine(line2,Math.PI/3, p2)
-// rotateLine(line3, -Math.PI / 3, p1)
-
-// console.log(line)
-// console.log(ball)
-
 
 function animate() {
     window.x = window.requestAnimationFrame(animate)
     ctx.clearRect(0, 0, innerWidth, innerHeight)
-    // i++
     
-    // if(i==72) i=0
-
-    //console.log(distanceFromLine(line, ball))
-
-    // if (distanceFromLine(line, ball) <= ball.radius) {
-    //     window.cancelAnimationFrame(window.x)
-
-    // }
-
     ball.move()
-    // ball.checkCollision()
-    if (ball.y <= 2 * canv.height / 3) {
+    if (ball.y <= 3 * canv.height / 4) {
         tri.move()
         tri.rotate()
     }
@@ -237,25 +197,8 @@ function animate() {
         tri.draw()
     }
     
-//     ctx.save()
 
-//     ctx.translate(canv.width/2, j)
-    
-//     ctx.rotate(Math.PI/36 * i)
-//     line.move()
-//     line2.move()
-//     line3.move()
-//     console.log(distanceFromLine(line, ball))
-
-//     ctx.restore()
-//     j += 2
-//     // if(ball.y <= canv.height/2){      
-//     //     line.move()
-//     // }
 }
 
-// window.addEventListener("keyup",() => {
-//     window.cancelAnimationFrame(window.x)
-// }) 
 
 animate()
