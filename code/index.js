@@ -145,6 +145,39 @@ function Arc(centre, radius, sAngle, eAngle, color){
 
 }
 
+function ColorSwitch(pos, vel) {
+    this.vel = vel
+    this.pos = pos
+    this.radius = 10
+    this.color
+    this.colorArr = ["#ffffff", "#ff0000", "#ff0", "#00ff00", "#0000ff"]
+    this.circle
+    this.i = 0
+
+    this.draw = function(){
+        this.i++
+
+        if(this.i%60 == 0){
+            this.color = this.colorArr[Math.floor(Math.random() * this.colorArr.length)]
+        }
+
+        this.circle = new Arc(this.pos, this.radius, 0, Math.PI * 2, this.color)
+        this.circle.draw()
+    }
+
+    this.move = function() {
+        this.pos.x += this.vel.x
+        this.pos.y += this.vel.y
+
+        if(ball.y == this.pos.y){
+            ball.color = colorArray[Math.floor(Math.random() * colorArray.length)]
+        }
+        
+        this.draw()
+    }
+
+}
+
 function gameEnd(){
     gameEnded = true
     gamePlayState = false
@@ -381,6 +414,9 @@ obstacles.push(tri)
 obstacles.push(cir)
 obstacles.push(fan)
 
+var pS = { x: canv.width/2, y: -1000}
+var swt = new ColorSwitch(pS,v)
+
 function animate() {
     window.x = window.requestAnimationFrame(animate)
     ctx.clearRect(0, 0, innerWidth, innerHeight)
@@ -392,6 +428,8 @@ function animate() {
             obs.end()
         })
 
+
+        swt.move()
         ctx.font = "20px 'Open-sans', sans-serif"
         ctx.fillStyle = "#ffffff"
         ctx.fillText(score, canv.width - 50, 30)
@@ -404,6 +442,7 @@ function animate() {
             ctx.fillStyle = "#ffffff"
             ctx.fillText(score, canv.width - 50, 30)
         })
+        swt.draw()
     }
     
 
