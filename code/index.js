@@ -27,18 +27,17 @@ window.addEventListener('mousedown', e => {
 //     ln.y2 = center.y + l2 * Math.sin(angle)
 // }
 
-// function distance(x0, y0, x, y) {
-//     return Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0))
-// }
+function distance(x0, y0, x, y) {
+    return Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0))
+}
 
-// function distanceFromLine(l,ball) {
-//     let m = (l.y2 - l.y1) / (l.x2 - l.x1)
-//     let x = (m / (m * m + 1)) * (ball.x / m + ball.y + m * l.x1 - l.y1)
-//     let y = m * (x - l.x1) + l.y1
-//     console.log(m)
-    
-//     return distance(ball.x, ball.y, x, y)
-// }
+function distanceFromLine(l,ball) {
+    let z = ((l.x2 - l.x1) * (ball.x - l.x1) + (l.y2 - l.y1) * (ball.y - l.y1)) / distance(l.x1, l.y1, l.x2, l.y2)
+    let a = distance(ball.x, ball.y, l.x1, l.y1)
+
+    // console.log(Math.sqrt(a * a - z * z))
+    return Math.sqrt( a * a - z * z)
+}
 
 
 
@@ -107,11 +106,12 @@ function Line(x1, y1, x2, y2, color) {
         ctx.stroke()
         ctx.closePath()
     }
+}
 
-    this.end = function () {
-        window.cancelAnimationFrame(window.x)
-    }
-
+function gameEnd(){
+    console.log("done")
+    window.cancelAnimationFrame(window.x)
+    // ctx.clearRect(0,0,innerWidth,innerHeight)
 }
 
 function Triangle(centre, side, velocity){
@@ -123,39 +123,59 @@ function Triangle(centre, side, velocity){
     this.p1 = { x: (side / Math.sqrt(3)) * Math.cos(this.angle), y: (side / Math.sqrt(3)) * Math.sin(this.angle) }
     this.p2 = { x: (side / Math.sqrt(3)) * Math.cos(this.angle + (2 / 3) * Math.PI), y: (side / Math.sqrt(3)) * Math.sin(this.angle + (2 / 3) * Math.PI) }
     this.p3 = { x: (side / Math.sqrt(3)) * Math.cos(this.angle + (4 / 3) * Math.PI), y: (side / Math.sqrt(3)) * Math.sin(this.angle + (4 / 3) * Math.PI) }
+    this.line1
+    this.line2
+    this.line3
 
     this.draw = function(){
         ctx.lineWidth = 10
         ctx.lineCap = "round"
 
-        let line1 = new Line(
+        this.line1 = new Line(
             this.centre.x + this.p1.x, this.centre.y + this.p1.y,
             this.centre.x + this.p2.x, this.centre.y + this.p2.y,
             "#ff0000"
         )
 
-        line1.draw()
+        this.line1.draw()
 
-        let line2 = new Line(
+        this.line2 = new Line(
             this.centre.x + this.p2.x, this.centre.y + this.p2.y,
             this.centre.x + this.p3.x, this.centre.y + this.p3.y,
             "#00ff00"
         )
 
-        line2.draw()
-        let line3 = new Line(
+        this.line2.draw()
+
+        this.line3 = new Line(
             this.centre.x + this.p3.x, this.centre.y + this.p3.y,
             this.centre.x + this.p1.x, this.centre.y + this.p1.y,
             "#0000ff"
         )
 
-        line3.draw()
+        this.line3.draw()
     }
 
     this.move = function(){
         this.centre.x += this.velocity.x
         this.centre.y += this.velocity.y
         this.draw()
+
+        if (distanceFromLine(this.line1, ball) <= ball.radius && this.line1.color != ball.color) {
+            // console.log(distanceFromLine(this.line1, ball))
+            gameEnd()
+        }
+
+        if (distanceFromLine(this.line2, ball) <= ball.radius && this.line2.color != ball.color) {
+            // console.log(distanceFromLine(this.line1, ball))
+            gameEnd()
+        }
+
+        if (distanceFromLine(this.line3, ball) <= ball.radius && this.line3.color != ball.color) {
+            console.log(distanceFromLine(this.line3, ball))
+            gameEnd()
+        }
+
     }
 
     this.rotate = function () {
@@ -209,7 +229,7 @@ function animate() {
 
     ball.move()
     // ball.checkCollision()
-    if (ball.y <= canv.height / 2) {
+    if (ball.y <= 2 * canv.height / 3) {
         tri.move()
         tri.rotate()
     }
