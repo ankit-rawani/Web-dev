@@ -86,7 +86,7 @@ function Ball(x, y, dx, dy, radius, color){
 
     this.move = function(){
         if(this.y >= canv.height - this.radius-1){
-            this.dy = -this.dy*0.95
+            this.dy = -this.dy*0.9
         }
         else{
             this.dy += 0.2   
@@ -527,8 +527,8 @@ function replayGame(){
     obstacles.push(cir)
     obstacles.push(fan)
 
-    var pS = { x: canv.width / 2, y: -1000 }
-    var swt = new ColorSwitch(pS, v)
+    pS = { x: canv.width / 2, y: -1000 }
+    swt = new ColorSwitch(pS, v)
 
     animate()
 
