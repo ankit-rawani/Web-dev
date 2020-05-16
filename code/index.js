@@ -150,7 +150,7 @@ function ColorSwitch(pos, vel) {
     this.pos = pos
     this.radius = 10
     this.color
-    this.colorArr = ["#ffffff", "#ff0000", "#ff0", "#00ff00", "#0000ff"]
+    this.colorArr = ["#ff0000", "#00ff00", "#0000ff"]
     this.circle
     this.i = 0
 
@@ -169,8 +169,8 @@ function ColorSwitch(pos, vel) {
         this.pos.x += this.vel.x
         this.pos.y += this.vel.y
 
-        if(ball.y == this.pos.y){
-            ball.color = colorArray[Math.floor(Math.random() * colorArray.length)]
+        if(ball.y <= this.pos.y+2 && ball.y >=this.pos.y - 2){
+            ball.color = this.colorArr[Math.floor(Math.random() * this.colorArr.length)]
         }
         
         this.draw()
