@@ -1,3 +1,16 @@
+const play = document.querySelector('#play')
+const high = document.querySelector('#high')
+const about = document.querySelector('#about')
+const intro = document.querySelector('#intro')
+const circle = document.querySelector('#circle')
+const options = document.querySelector('#options')
+const menu = document.querySelector('#menu')
+const playgame = document.querySelector('#playgame')
+const replay = document.querySelector('#replay')
+const ham = document.querySelector('#ham')
+const back = document.querySelector('#back')
+const cross = document.querySelector('#cross')
+
 const canv = document.querySelector('canvas')
 var ctx = canv.getContext("2d")
 
@@ -7,13 +20,16 @@ canv.width = window.innerWidth
 ctx.lineWidth = 10
 ctx.lineCap = "round"
 
+var gamePlayState = true
+var gameEnded = false
+
 window.addEventListener('resize', e => {
     canv.height = window.innerHeight
     canv.width = window.innerWidth
 })
 
 
-window.addEventListener('mousedown', e => {
+canv.addEventListener('mousedown', e => {
     ball.dy -= 5
     if(ball.y >= canv.height-ball.radius-1){
         ball.y = canv.height - ball.radius - 2
@@ -118,6 +134,8 @@ function Arc(centre, radius, sAngle, eAngle, color){
 }
 
 function gameEnd(){
+    gameEnded = true
+    gamePlayState = false
     console.log("done")
     window.cancelAnimationFrame(window.x)
     ctx.clearRect(0,0,canv.width,canv.height)
@@ -372,5 +390,86 @@ function animate() {
 
 }
 
+// animate()
 
-animate()
+
+play.addEventListener("click", e=> {
+    circle.style.display = "none"
+    intro.style.display = "none"
+    options.style.display = "none"
+    canv.style.display = "block"
+
+    ham.style.display = "block"
+    replayGame()
+})
+
+ham.addEventListener("click", pauseGame)
+back.addEventListener("click", backToHome)
+cross.addEventListener("click", playGame)
+replay.addEventListener("click", replayGame)
+playgame.addEventListener("click", playGame)
+
+
+function pauseGame(){
+    window.cancelAnimationFrame(window.x)
+    menu.style.display = "inline-block"
+    ham.style.display = "none"
+    gamePlayState = false
+}
+
+function playGame(){
+    if(!gamePlayState && !gameEnded){
+        ham.style.display = "inline-block"
+        menu.style.display = "none"
+        window.x = window.requestAnimationFrame(animate)
+        gamePlayState = true
+    }
+}
+
+function replayGame(){
+    gamePlayState = true
+    gameEnded = false
+    window.cancelAnimationFrame(window.x)
+    ham.style.display = "inline-block"
+    menu.style.display = "none"
+    
+    ctx.clearRect(0, 0, innerWidth, innerHeight)
+
+    obstacles = []
+    var v = { x: 0, y: 3 }
+    var y_array = [-100, -700, -1300]
+
+    y_array.sort(func)
+
+    var c1 = { x: canv.width / 2, y: y_array[0] }
+    var s1 = 200
+
+    var c2 = { x: canv.width / 2, y: y_array[1] }
+    var s2 = 100
+
+    var c3 = { x: canv.width / 2 - 40, y: y_array[2] }
+    var s3 = 100
+
+    ball = new Ball(canv.width / 2, canv.height / 2, 0, 2, 5, colorArray[Math.floor(Math.random() * 3)])
+    tri = new Triangle(c1, s1, v)
+    cir = new Circle(c2, s2, v)
+    fan = new Fan(c3, s3, v)
+
+    obstacles.push(tri)
+    obstacles.push(cir)
+    obstacles.push(fan)
+
+    animate()
+
+}
+
+function backToHome(){
+    canv.style.display = "none"
+    circle.style.display = "block"
+    intro.style.display = "block"
+    options.style.display = "flex"
+    menu.style.display = "none"
+
+    ham.style.display = "none"
+
+}

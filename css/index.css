@@ -2,4 +2,111 @@ body{
     margin: 0;
     padding: 0;
     background: #222222;
+    font-family: 'Chewy', cursive;
+    font-family: 'Open Sans', sans-serif;
+}
+
+canvas {
+    display: none;
+}
+
+#menu {
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100vw;
+    position: absolute;
+    z-index: 3;
+}
+
+#back {
+    margin: 0 1%;
+    color: black;
+    font-family: 'Open-sans', sans-serif;
+    background-color: white;
+    display: inline-block;
+    padding: 1%;
+    border-radius: 1vh;
+    vertical-align: middle;
+}
+
+#playgame,
+#replay {
+    margin: 0 1%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#ham {
+    display: none;
+    top: 0;
+    left: 0;
+    vertical-align: middle;
+    position: absolute;
+    z-index: 5;
+}
+
+#cross {
+    margin: 1% auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#intro{
+    width: 100vw;
+    margin-top: 10%;
+    font-size: 15vw;
+    font-family: 'Chewy', cursive;
+    color: white;
+    text-align: center;
+}
+
+#circle{
+    top: 10vh;
+    left: 10vw;
+    width: 60vh;
+    height: 60vh;
+    border-radius: 50%;
+    background: linear-gradient(to top left, #ffe600, #ff7300, #f82828);
+    position: absolute;
+    z-index: -1;
+}
+
+#options {
+    margin: 10% auto;
+    display: flex;
+}
+
+#options div {
+    margin: 0% auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#play,
+#about,
+#high {
+    width: 10vh;
+    height: 10vh;
+    transition-duration: 1s;
+}
+
+#play:hover,
+#about:hover,
+#high:hover {
+    transform: scale(1.5);
+}
+
+@media screen and (max-width: 768px) {
+    #intro{
+    font-size: 20vw;
+    margin: 20% auto;
+    }
+
+    #circle{
+        left: 2vh;
+        top: 5vh;
+        width: 30vh;
+        height: 30vh;
+    }
 }
