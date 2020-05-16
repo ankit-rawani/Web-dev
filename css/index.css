@@ -2,8 +2,37 @@ body{
     margin: 0;
     padding: 0;
     background: #222222;
-    font-family: 'Chewy', cursive;
     font-family: 'Open Sans', sans-serif;
+}
+
+#blackout { 
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left:0;
+    top: 0;
+    z-index: 9;
+}
+
+#msg { 
+    background-color: rgb(255, 255, 255);
+    display: none;
+    width: 60vw;
+    height: 60vh;
+    position: absolute;
+    left:20vw;
+    top: 20vh;
+    z-index: 10;
+}
+
+#crossHigh {
+    left: 0;
+    top: 0;
+    display: none;
+    position: absolute;
+    z-index: 11;
 }
 
 canvas {

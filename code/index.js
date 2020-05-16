@@ -1,3 +1,12 @@
+var playername = prompt("Enter your name")
+var score = 0
+var highScore
+
+if(localStorage.length == 0){
+    localStorage.setItem(playername, 0)
+}
+highScore = localStorage[localStorage.key(0)]
+
 const play = document.querySelector('#play')
 const high = document.querySelector('#high')
 const about = document.querySelector('#about')
@@ -10,6 +19,9 @@ const replay = document.querySelector('#replay')
 const ham = document.querySelector('#ham')
 const back = document.querySelector('#back')
 const cross = document.querySelector('#cross')
+const blackout = document.querySelector('#blackout')
+const msg = document.querySelector("#msg")
+const crossHigh = document.querySelector("#crossHigh")
 
 const canv = document.querySelector('canvas')
 var ctx = canv.getContext("2d")
@@ -379,11 +391,18 @@ function animate() {
             obs.move()
             obs.end()
         })
+
+        ctx.font = "20px 'Open-sans', sans-serif"
+        ctx.fillStyle = "#ffffff"
+        ctx.fillText(score, canv.width - 50, 30)
+        score += v.y 
     }
     else {
         obstacles.forEach(obs => {
             obs.rotate()
             obs.end()
+            ctx.fillStyle = "#ffffff"
+            ctx.fillText(score, canv.width - 50, 30)
         })
     }
     
@@ -429,6 +448,16 @@ function playGame(){
 function replayGame(){
     gamePlayState = true
     gameEnded = false
+
+    if(highScore < score){
+        localStorage.clear()
+        localStorage.setItem(playername, score)
+    }
+
+    score = 0
+    highScore = localStorage[localStorage.key(0)]
+    ctx.lineWidth = 10
+    ctx.lineCap = "round"
     window.cancelAnimationFrame(window.x)
     ham.style.display = "inline-block"
     menu.style.display = "none"
@@ -472,4 +501,48 @@ function backToHome(){
 
     ham.style.display = "none"
 
+}
+
+high.addEventListener("click", showHigh)
+crossHigh.addEventListener("click", hideHigh)
+
+var hmsg = document.createElement('p')
+hmsg.style.fontSize = "5vh"
+hmsg.style.textAlign = "center"
+
+var htitle = document.createElement('div')
+htitle.style.fontSize = "8vh"
+htitle.style.textAlign = "center"
+htitle.style.fontFamily = "'Chewy', cursive"
+
+function showHigh(){
+    hmsg.textContent = localStorage.key(0) + " : " + localStorage[localStorage.key(0)]
+    htitle.textContent = "Our Highest Scorer"
+    msg.appendChild(htitle)
+    msg.appendChild(hmsg)
+    blackout.style.display = "block"
+    msg.style.display = "block"
+    crossHigh.style.display = "block"
+}
+
+function hideHigh(){
+    while(msg.firstChild){
+        msg.removeChild(msg.firstChild)
+    }
+
+    blackout.style.display = "none"
+    msg.style.display = "none"
+    crossHigh.style.display = "none"
+}
+
+about.addEventListener("click", showAbout)
+
+function showAbout() {
+    htitle.textContent = "About"
+    hmsg.innerHTML = "This is a game made as a task for the Inductions of Delta Club of NITT.<br/>Made by Ankit Rawani <br/>GitHub ID : <a href='https://github.com/ankit-rawani'><b>ankit-rawani</b></a>"
+    msg.appendChild(htitle)
+    msg.appendChild(hmsg)
+    blackout.style.display = "block"
+    msg.style.display = "block"
+    crossHigh.style.display = "block"
 }
