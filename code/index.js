@@ -527,6 +527,9 @@ function replayGame(){
     obstacles.push(cir)
     obstacles.push(fan)
 
+    var pS = { x: canv.width / 2, y: -1000 }
+    var swt = new ColorSwitch(pS, v)
+
     animate()
 
 }
