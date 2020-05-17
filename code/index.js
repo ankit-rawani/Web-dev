@@ -567,7 +567,7 @@ hmsg.style.fontSize = "3vw"
 hmsg.style.textAlign = "center"
 
 var htitle = document.createElement('div')
-htitle.style.fontSize = "8vh"
+htitle.style.fontSize = "6vw"
 htitle.style.textAlign = "center"
 htitle.style.fontFamily = "'Chewy', cursive"
 
