@@ -7,10 +7,10 @@ if(localStorage.length == 0){
 }
 highScore = localStorage[localStorage.key(0)]
 
-var aud = new Audio("https://raw.githubusercontent.com/ankit-rawani/Web-dev/master/Evix%20-%20Whatcha%20Think%20(feat.%20Jake%20Herring).mp3")
-var click = new Audio("https://raw.githubusercontent.com/ankit-rawani/Web-dev/master/Web-dev-Task1/assets/Click.mp3")
-var err = new Audio("https://raw.githubusercontent.com/ankit-rawani/Web-dev/master/Web-dev-Task1/assets/Click2.mp3")
-var beep = new Audio("https://github.com/ankit-rawani/Web-dev/blob/master/Web-dev-Task1/assets/timebeep.mp3")
+var aud = new Audio("../Evix - Whatcha Think (feat. Jake Herring).mp3")
+var click = new Audio("../Web-dev-Task1/assets/Click.mp3")
+var err = new Audio("../Web-dev-Task1/assets/Click2.mp3")
+var beep = new Audio("../Web-dev-Task1/assets/timebeep.mp3")
 
 const play = document.querySelector('#play')
 const high = document.querySelector('#high')
