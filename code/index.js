@@ -191,6 +191,14 @@ function gameEnd(){
     console.log("done")
     window.cancelAnimationFrame(window.x)
     ctx.clearRect(0,0,canv.width,canv.height)
+
+    htitle.textContent = "GAME OVER!!!"
+    hmsg.textContent = "Try again, all you need is a little practice."
+    msg.appendChild(htitle)
+    msg.appendChild(hmsg)
+    blackout.style.display = "block"
+    msg.style.display = "block"
+    crossHigh.style.display = "block"
 }
 
 function Triangle(centre, side, velocity){
